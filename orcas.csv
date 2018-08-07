@@ -1,0 +1,3 @@
+Package,Activity,MinAPI,MaxAPI,Vendor,Tested
+com.huawei.systemmanager,com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity,26,0,Huawei,true
+com.huawei.systemmanager,com.huawei.systemmanager.optimize.process.ProtectActivity,0,25,Huawei,true
