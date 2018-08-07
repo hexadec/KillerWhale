@@ -28,7 +28,7 @@ public final class OrcaManager {
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(context.getAssets().open("orcas.csv"), "UTF-8"));
             orcas = new ArrayList<>();
-            String line;
+            String line = reader.readLine();
             readerloop: while ((line = reader.readLine()) != null) {
                 String[] elements = line.split(",");
                 Orca o = new Orca();
