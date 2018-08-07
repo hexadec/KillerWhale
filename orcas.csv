@@ -9,3 +9,5 @@ com.vivo.permissionmanager,com.vivo.permissionmanager.activity.BgStartUpManagerA
 com.coloros.safecenter,com.coloros.safecenter.permission.startup.StartupAppListActivity,0,0,Oppo,false
 com.coloros.safecenter,com.coloros.safecenter.startupapp.StartupAppListActivity,0,0,Oppo,false
 com.letv.android.letvsafe,com.letv.android.letvsafe.AutobootManageActivity,0,0,Letv,false
+com.samsung.android.sm,com.samsung.android.sm.ui.battery.BatteryActivity,0,23,Samsung,false
+com.samsung.android.lool,com.samsung.android.sm.ui.battery.BatteryActivity,24,0,Samsung,false
