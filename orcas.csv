@@ -1,3 +1,11 @@
 Package,Activity,MinAPI,MaxAPI,Vendor,Tested
 com.huawei.systemmanager,com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity,26,0,Huawei,true
 com.huawei.systemmanager,com.huawei.systemmanager.optimize.process.ProtectActivity,0,25,Huawei,true
+com.huawei.systemmanager,com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity,26,0,Honor,false
+com.huawei.systemmanager,com.huawei.systemmanager.optimize.process.ProtectActivity,0,25,Honor,false
+com.miui.securitycenter,com.miui.permcenter.autostart.AutoStartManagementActivity,0,0,Xiaomi,false
+com.asus.mobilemanager,com.asus.mobilemanager.entry.FunctionActivity,0,0,Asus,false
+com.vivo.permissionmanager,com.vivo.permissionmanager.activity.BgStartUpManagerActivity,0,0,Vivo,false
+com.coloros.safecenter,com.coloros.safecenter.permission.startup.StartupAppListActivity,0,0,Oppo,false
+com.coloros.safecenter,com.coloros.safecenter.startupapp.StartupAppListActivity,0,0,Oppo,false
+com.letv.android.letvsafe,com.letv.android.letvsafe.AutobootManageActivity,0,0,Letv,false
