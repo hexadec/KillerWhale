@@ -18,18 +18,37 @@ public final class OrcaManager {
     private Context context;
     private List<Orca> orcas;
 
+    /**
+     * Constructor
+     * @param context context to work with while reading from assets, and starting activities
+     *                be careful not to use this object if its context does not exist anymore
+     * @throws FileNotFoundException if orcas.csv is not placed in assets folder, or an error occurs while parsing
+     */
     public OrcaManager(Context context) throws FileNotFoundException {
         this(context, null);
     }
 
+    /**
+     *
+     * @param context context to work with while reading from assets, and starting activities
+     *                be careful not to use this object if its context does not exist anymore
+     * @param excludeVendor String array containing vendor names who should be excluded while doing any work
+     *                      equivalent of deleting all lines containing given vendor names
+     * @throws FileNotFoundException if orcas.csv is not placed in assets folder, or an error occurs while parsing
+     */
     public OrcaManager(Context context, String[] excludeVendor) throws FileNotFoundException {
         this.context = context;
         try {
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(context.getAssets().open("orcas.csv"), "UTF-8"));
             orcas = new ArrayList<>();
-            String line = reader.readLine();
+            String line;
+            boolean first = true;
             readerloop: while ((line = reader.readLine()) != null) {
+                if (first) {
+                    first = false;
+                    continue;
+                }
                 String[] elements = line.split(",");
                 Orca o = new Orca();
                 o.settings = new ComponentName(elements[0],elements[1]);
@@ -53,25 +72,38 @@ public final class OrcaManager {
         }
     }
 
+    /**
+     *
+     * @return true if the given vendor and API level is in the file
+     *          false otherwise
+     */
     public boolean hasVendorOptimization() {
         for (Orca o : orcas) {
             if (o.vendor.equalsIgnoreCase(Build.MANUFACTURER) &&
-                    o.MinAPI < Build.VERSION.SDK_INT && (o.MaxAPI > Build.VERSION.SDK_INT || o.MaxAPI == 0)) {
+                    o.MinAPI <= Build.VERSION.SDK_INT && (o.MaxAPI >= Build.VERSION.SDK_INT || o.MaxAPI == 0)) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Start all intents matching vendor name and API level
+     * @throws ActivityNotFoundException
+     */
     public void startIntents() throws ActivityNotFoundException {
         context.startActivities(getIntents());
     }
 
+    /**
+     *
+     * @return all intents matching vendor name and API level
+     */
     public Intent[] getIntents() {
         List<Intent> intentList = new ArrayList<>();
         for (Orca o : orcas) {
             if (o.vendor.equalsIgnoreCase(Build.MANUFACTURER) &&
-                    o.MinAPI < Build.VERSION.SDK_INT && (o.MaxAPI > Build.VERSION.SDK_INT || o.MaxAPI == 0)) {
+                    o.MinAPI <= Build.VERSION.SDK_INT && (o.MaxAPI >= Build.VERSION.SDK_INT || o.MaxAPI == 0)) {
                 intentList.add(new Intent().setComponent(o.settings));
             }
         }
