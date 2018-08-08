@@ -20,6 +20,7 @@ public final class OrcaManager {
 
     /**
      * Constructor
+     *
      * @param context context to work with while reading from assets, and starting activities
      *                be careful not to use this object if its context does not exist anymore
      * @throws FileNotFoundException if orcas.csv is not placed in assets folder, or an error occurs while parsing
@@ -29,9 +30,8 @@ public final class OrcaManager {
     }
 
     /**
-     *
-     * @param context context to work with while reading from assets, and starting activities
-     *                be careful not to use this object if its context does not exist anymore
+     * @param context       context to work with while reading from assets, and starting activities
+     *                      be careful not to use this object if its context does not exist anymore
      * @param excludeVendor String array containing vendor names who should be excluded while doing any work
      *                      equivalent of deleting all lines containing given vendor names
      * @throws FileNotFoundException if orcas.csv is not placed in assets folder, or an error occurs while parsing
@@ -44,14 +44,15 @@ public final class OrcaManager {
             orcas = new ArrayList<>();
             String line;
             boolean first = true;
-            readerloop: while ((line = reader.readLine()) != null) {
+            readerloop:
+            while ((line = reader.readLine()) != null) {
                 if (first) {
                     first = false;
                     continue;
                 }
                 String[] elements = line.split(",");
                 Orca o = new Orca();
-                o.settings = new ComponentName(elements[0],elements[1]);
+                o.settings = new ComponentName(elements[0], elements[1]);
                 o.vendor = elements[4];
                 if (excludeVendor != null) {
                     for (String vendor : excludeVendor) {
@@ -73,14 +74,12 @@ public final class OrcaManager {
     }
 
     /**
-     *
      * @return true if the given vendor and API level is in the file
-     *          false otherwise
+     * false otherwise
      */
     public boolean hasVendorOptimization() {
         for (Orca o : orcas) {
-            if (o.vendor.equalsIgnoreCase(Build.MANUFACTURER) &&
-                    o.MinAPI <= Build.VERSION.SDK_INT && (o.MaxAPI >= Build.VERSION.SDK_INT || o.MaxAPI == 0)) {
+            if (o.matchesDevice()) {
                 return true;
             }
         }
@@ -89,6 +88,7 @@ public final class OrcaManager {
 
     /**
      * Start all intents matching vendor name and API level
+     *
      * @throws ActivityNotFoundException
      */
     public void startIntents() throws ActivityNotFoundException {
@@ -96,14 +96,12 @@ public final class OrcaManager {
     }
 
     /**
-     *
      * @return all intents matching vendor name and API level
      */
     public Intent[] getIntents() {
         List<Intent> intentList = new ArrayList<>();
         for (Orca o : orcas) {
-            if (o.vendor.equalsIgnoreCase(Build.MANUFACTURER) &&
-                    o.MinAPI <= Build.VERSION.SDK_INT && (o.MaxAPI >= Build.VERSION.SDK_INT || o.MaxAPI == 0)) {
+            if (o.matchesDevice()) {
                 intentList.add(new Intent().setComponent(o.settings));
             }
         }
@@ -116,4 +114,9 @@ final class Orca {
     int MaxAPI;
     String vendor;
     ComponentName settings;
+
+    boolean matchesDevice() {
+        return (vendor.equalsIgnoreCase(Build.MANUFACTURER) &&
+                MinAPI <= Build.VERSION.SDK_INT && (MaxAPI >= Build.VERSION.SDK_INT || MaxAPI == 0));
+    }
 }
