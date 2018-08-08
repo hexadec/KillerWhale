@@ -12,3 +12,4 @@ com.letv.android.letvsafe,com.letv.android.letvsafe.AutobootManageActivity,0,0,L
 com.samsung.android.sm,com.samsung.android.sm.ui.battery.BatteryActivity,0,23,Samsung,false
 com.samsung.android.lool,com.samsung.android.sm.ui.battery.BatteryActivity,24,0,Samsung,false
 com.htc.pitroad,com.htc.pitroad.landingpage.activity.LandingPageActivity,0,0,HTC,false
+com.android.settings,com.android.settings.Settings$StaminaSettingsActivity,0,0,Sony,true
