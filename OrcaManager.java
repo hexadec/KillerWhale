@@ -66,10 +66,10 @@ public final class OrcaManager {
             }
         } catch (IOException e) {
             throw new FileNotFoundException();
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException|ArrayIndexOutOfBoundsException e) {
             throw new FileNotFoundException("Invalid file!");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new FileNotFoundException("Invalid file!");
+        } catch (Exception e) {
+            throw new FileNotFoundException(e.getMessage());
         }
     }
 
@@ -90,9 +90,32 @@ public final class OrcaManager {
      * Start all intents matching vendor name and API level
      *
      * @throws ActivityNotFoundException
+     * @throws IllegalArgumentException
      */
-    public void startIntents() throws ActivityNotFoundException {
+    public void startIntents() throws ActivityNotFoundException, IllegalArgumentException {
+        Intent[] intents = getIntents();
+        if (intents.length == 0) throw new ActivityNotFoundException("No intents found");
         context.startActivities(getIntents());
+    }
+
+    /**
+     * Start all intents matching vendor name and API level
+     * Exceptions are handled internally
+     *
+     * @return number of activities started
+     */
+    public int startEachIntent() {
+        Intent[] intents = getIntents();
+        int activitiesStarted = 0;
+        for (Intent i : intents) {
+            try {
+                context.startActivity(i);
+                activitiesStarted++;
+            } catch (ActivityNotFoundException | IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+        return activitiesStarted;
     }
 
     /**
@@ -102,7 +125,8 @@ public final class OrcaManager {
         List<Intent> intentList = new ArrayList<>();
         for (Orca o : orcas) {
             if (o.matchesDevice()) {
-                intentList.add(new Intent().setComponent(o.settings));
+                intentList.add(new Intent().setComponent(o.settings)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         }
         return intentList.toArray(new Intent[intentList.size()]);
@@ -120,3 +144,4 @@ final class Orca {
                 MinAPI <= Build.VERSION.SDK_INT && (MaxAPI >= Build.VERSION.SDK_INT || MaxAPI == 0));
     }
 }
+
